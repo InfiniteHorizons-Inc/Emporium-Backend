@@ -1,5 +1,5 @@
 spring.application.name=Payment-Service
-info.app.version=@project.version@
+info.app.version=__version__
 server.port=0
 
 spring.profiles.active=local

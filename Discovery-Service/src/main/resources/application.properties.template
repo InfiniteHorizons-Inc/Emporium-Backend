@@ -1,5 +1,5 @@
 spring.application.name=Discovery-Service
-info.app.version=@project.version@
+info.app.version=__version__
 server.port=8761
 
 spring.output.ansi.enabled=always
