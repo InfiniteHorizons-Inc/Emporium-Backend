@@ -1,3 +1,5 @@
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -18,6 +20,29 @@ val versionNumber = "${currentDateTime}-${versionPrefix}"
 
 group = "com.infinitehorizons"
 version = versionNumber
+
+tasks.register("replaceVersion") {
+    doLast {
+        val templatePath = Paths.get("${project.projectDir}/src/main/resources/application.properties.template")
+        val outputPath = Paths.get("${project.projectDir}/src/main/resources/application.properties")
+
+        if (Files.exists(outputPath)) {
+            Files.delete(outputPath)
+        }
+
+        var content = Files.readString(templatePath)
+
+        content = content.replace("__version__", project.version.toString())
+
+        Files.createDirectories(outputPath.parent)
+
+        Files.writeString(outputPath, content)
+    }
+}
+
+tasks.processResources {
+    dependsOn("replaceVersion")
+}
 
 java {
     toolchain {
@@ -41,6 +66,7 @@ dependencies {
 
     // Springdoc OpenApi Swagger-UI: API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     // Spring Boot DevTools: Development Only
     "developmentOnly"("org.springframework.boot:spring-boot-devtools")
